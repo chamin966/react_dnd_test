@@ -6,6 +6,7 @@ import {
   dispatchFishCountUp
 } from '../../store/ZustantReRenderTest/rerenderTestAction';
 import { useEffect } from 'react';
+import PathButton from '../../component/PathButton';
 
 function ZustandReRendering() {
   const fish = useReRenderTest(
@@ -18,7 +19,7 @@ function ZustandReRendering() {
   );
 
   const reRenderCallbackTest = () => {
-    console.log('렌더링 되었습니다.');
+    console.log('함수가 실행 되었습니다.');
   };
 
   useEffect(() => {
@@ -27,6 +28,7 @@ function ZustandReRendering() {
 
   return (
     <div>
+      <PathButton path={'/'} label={'홈으로'} />
       <div>fish: {fish}</div>
       <div>bear: {bear}</div>
       <button onClick={() => dispatchFishCountUp()}>Fish Up</button>
