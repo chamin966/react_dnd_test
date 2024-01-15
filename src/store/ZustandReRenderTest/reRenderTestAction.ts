@@ -1,4 +1,4 @@
-import { useReRenderTest } from './rerendertTestStore';
+import { useReRenderTest } from './reRendertTestStore';
 
 export const dispatchFishCountUp = () => {
   useReRenderTest.setState((prev) => ({

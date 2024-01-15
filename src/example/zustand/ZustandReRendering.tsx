@@ -1,21 +1,21 @@
-import { useReRenderTest } from '../../store/ZustantReRenderTest/rerendertTestStore';
-import _ from 'lodash';
+import { useReRenderTest } from '../../store/ZustandReRenderTest/reRendertTestStore';
 import {
   dispatchBearCountUp,
   dispatchFishCountDown,
   dispatchFishCountUp
-} from '../../store/ZustantReRenderTest/rerenderTestAction';
+} from '../../store/ZustandReRenderTest/reRenderTestAction';
 import { useEffect } from 'react';
 import PathButton from '../../component/PathButton';
+import { isEqual } from 'lodash';
 
 function ZustandReRendering() {
   const fish = useReRenderTest(
     (state) => state.fish,
-    (prevStore, nextStore) => _.isEqual(prevStore, nextStore)
+    (prevStore, nextStore) => isEqual(prevStore, nextStore)
   );
   const bear = useReRenderTest(
     (state) => state.bear,
-    (prevStore, nextStore) => _.isEqual(prevStore, nextStore)
+    (prevStore, nextStore) => isEqual(prevStore, nextStore)
   );
 
   const reRenderCallbackTest = () => {
