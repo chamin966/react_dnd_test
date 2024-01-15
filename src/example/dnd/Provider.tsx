@@ -1,11 +1,12 @@
 import { DndProvider } from 'react-dnd';
-import SingleTarget from './dustbin/SingleTarget';
+
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Container } from './dustbin/SingleTarget/Container';
 
 function Provider() {
   return (
     <DndProvider backend={HTML5Backend}>
-      <SingleTarget />
+      <Container />
     </DndProvider>
   );
 }
