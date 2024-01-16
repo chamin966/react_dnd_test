@@ -1,7 +1,10 @@
 import { DndProvider } from 'react-dnd';
 
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import DragAround from './dragAround/DragAround';
+import { Container } from './nesting/dropTargets/Container';
+// import { Container } from './nesting/dragSources/Container';
+// import DragAround from './dragAround/DragAround';
+// import Form from './practice/Form';
 // import { Container } from './dustbin/copyAndMove/Container';
 // import { Container } from './dustbin/multipleTarget.tsx/Container';
 // import { Container } from './dustbin/SingleTarget/Container';
@@ -12,7 +15,10 @@ function Provider() {
       {/*<Container />*/}
       {/*<Container />*/}
       {/*<Container />*/}
-      <DragAround />
+      {/*<DragAround />*/}
+      {/*<Form />*/}
+      {/*<Container />*/}
+      <Container />
     </DndProvider>
   );
 }
