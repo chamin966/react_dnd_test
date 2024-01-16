@@ -1,8 +1,8 @@
 import { DndProvider } from 'react-dnd';
 
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Container } from './Customize/Container';
-// import { Container } from './sortable/Container';
+// import { Container } from './Customize/Container';
+import { Container } from './sortable/Container';
 // import { Container } from './nesting/dropTargets/Container';
 // import { Container } from './nesting/dragSources/Container';
 // import DragAround from './dragAround/DragAround';
@@ -22,7 +22,7 @@ function Provider() {
       {/*<Container />*/}
       {/*<Container />*/}
       {/*<Container />*/}
-      <Container />
+      {/*<Container />*/}
     </DndProvider>
   );
 }
