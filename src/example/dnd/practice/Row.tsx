@@ -19,7 +19,7 @@ function Row(props: RowProps) {
         display: 'flex',
         gap: '10px',
         padding: '20px',
-        backgroundColor: 'yellow',
+        backgroundColor: 'coral',
         border: '1px solid black'
       }}
     >

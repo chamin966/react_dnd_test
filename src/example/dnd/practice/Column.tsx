@@ -22,7 +22,7 @@ function Column(props: ColumnProps) {
         gap: '10px',
         border: '1px solid black',
         padding: '20px',
-        backgroundColor: 'blue'
+        backgroundColor: 'beige'
       }}
     >
       {props.controls.map((control: string) => (

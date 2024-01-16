@@ -7,7 +7,7 @@ function Control(props: ControlProps) {
     <div
       style={{
         height: '50px',
-        backgroundColor: 'gray',
+        backgroundColor: 'burlywood',
         border: '1px solid black',
         padding: '10px'
       }}

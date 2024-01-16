@@ -22,7 +22,7 @@ function Section(props: SectionProps) {
         flexDirection: 'column',
         gap: '10px',
         padding: '20px',
-        backgroundColor: 'green',
+        backgroundColor: 'darkkhaki',
         border: '1px solid black'
       }}
     >
