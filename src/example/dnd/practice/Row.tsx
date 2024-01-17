@@ -1,5 +1,5 @@
 import Column, { IColumn } from './Column';
-import { useCallback, useRef } from 'react';
+import { FC, memo, useCallback, useRef } from 'react';
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
@@ -24,7 +24,7 @@ interface RowProps {
   index: number;
 }
 
-function Row(props: RowProps) {
+const Row: FC<RowProps> = memo(function Row(props: RowProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ handlerId }, drop] = useDrop<
@@ -122,6 +122,6 @@ function Row(props: RowProps) {
       </div>
     </div>
   );
-}
+});
 
 export default Row;

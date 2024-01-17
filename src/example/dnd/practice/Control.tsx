@@ -1,5 +1,5 @@
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
-import { useRef } from 'react';
+import { FC, memo, useRef } from 'react';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchControlMove } from '../../../store/formData/formDataAction';
@@ -19,8 +19,7 @@ export interface ControlProps {
   parentRowId: string;
   parentColumnId: string;
 }
-
-function Control(props: ControlProps) {
+const Control: FC<ControlProps> = memo(function Control(props: ControlProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ handlerId }, drop] = useDrop<
@@ -101,6 +100,6 @@ function Control(props: ControlProps) {
       {props.parentSectionId}
     </div>
   );
-}
+});
 
 export default Control;

@@ -1,5 +1,5 @@
 import Row, { IRow } from './Row';
-import { useCallback, useRef } from 'react';
+import { FC, memo, useCallback, useRef } from 'react';
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
@@ -24,7 +24,7 @@ interface SectionProps {
   index: number;
 }
 
-function Section(props: SectionProps) {
+const Section: FC<SectionProps> = memo(function Section(props: SectionProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ handlerId }, drop] = useDrop<
@@ -114,6 +114,6 @@ function Section(props: SectionProps) {
       </div>
     </div>
   );
-}
+});
 
 export default Section;

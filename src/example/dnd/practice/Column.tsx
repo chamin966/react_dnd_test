@@ -1,9 +1,10 @@
 import Control from './Control';
-import { useCallback, useRef } from 'react';
+import { memo, useCallback, useRef } from 'react';
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchColumnMove } from '../../../store/formData/formDataAction';
+import { FC } from 'react/index';
 
 export interface IDragColumnSource {
   id: string;
@@ -26,7 +27,7 @@ interface ColumnProps {
   index: number;
 }
 
-function Column(props: ColumnProps) {
+const Column: FC<ColumnProps> = memo(function Column(props) {
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ handlerId }, drop] = useDrop<
@@ -34,13 +35,18 @@ function Column(props: ColumnProps) {
     void,
     { handlerId: Identifier | null }
   >({
-    accept: ItemTypes.Column,
+    accept: [ItemTypes.CONTROL, ItemTypes.Column],
     collect: (monitor) => {
       return {
         handlerId: monitor.getHandlerId()
       };
     },
     hover: (item: IDragColumnSource, monitor) => {
+      const itemType = monitor.getItemType();
+      if (itemType === ItemTypes.CONTROL) {
+        console.log('컨트롤 들어옴');
+        return;
+      }
       if (!ref.current) return;
 
       const dragIndex = item.index;
@@ -125,6 +131,6 @@ function Column(props: ColumnProps) {
       </div>
     </div>
   );
-}
+});
 
 export default Column;

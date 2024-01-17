@@ -302,3 +302,10 @@ export const dispatchSectionMove = (
     });
   });
 };
+
+export const dispatchEmptyColumn = (
+  draggingItem: IDragSectionSource,
+  hoveringItem: IDragSectionSource
+) => {
+  return;
+};
