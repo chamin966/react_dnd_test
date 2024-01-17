@@ -20,7 +20,6 @@ export interface IColumn {
 
 interface ColumnProps {
   id: string;
-  type: string;
   controls: string[];
   parentSectionId: string;
   parentRowId: string;
@@ -98,6 +97,7 @@ function Column(props: ColumnProps) {
       />
     );
   }, []);
+
   return (
     <div
       ref={ref}

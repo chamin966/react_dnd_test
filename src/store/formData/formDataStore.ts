@@ -70,7 +70,7 @@ const formData = () => ({
             ]
           },
           {
-            id: 'row-2',
+            id: 'row-4',
             type: 'row',
             columns: [
               {

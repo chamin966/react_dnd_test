@@ -27,7 +27,6 @@ function Form() {
             key={section.id}
             parentFormId={form.id}
             id={section.id}
-            type={section.type}
             rows={section.rows}
             title={section.title}
             index={index}
