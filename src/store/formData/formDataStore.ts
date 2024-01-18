@@ -76,6 +76,4 @@ const formData = () => ({
   }
 });
 
-export const useFormData = create(
-  immer(() => ({ ...formData(), dispatchControlMove: dispatchControlMove }))
-);
+export const useFormData = create(immer(() => formData()));
