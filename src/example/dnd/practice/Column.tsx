@@ -7,6 +7,7 @@ import { dispatchColumnMove } from '../../../store/formData/formDataAction';
 import { FC } from 'react/index';
 import { isEqual } from 'lodash';
 import Placeholder from './Placeholder';
+import { ShouldDispatchMove } from '../../../util/shouldDispatchMove';
 
 const getStyle = (isDragging: boolean): CSSProperties => {
   return {
@@ -53,24 +54,23 @@ const Column: FC<ColumnProps> = memo(
         };
       },
       hover: (item: IDragColumnSource, monitor) => {
-        if (!ref.current) return;
-        const dragIndex = item.index;
-        const hoverIndex = props.index;
+        const shouldDispatch = ShouldDispatchMove({
+          ref,
+          dragIndex: item.index,
+          dragParentId: item.parentId,
+          hoverIndex: props.index,
+          hoverParentId: props.parentId,
+          monitor,
+          isVertical: false
+        });
 
-        if (item.parentId === props.parentId && dragIndex === hoverIndex) return;
-
-        const hoverBoundingRect = ref.current?.getBoundingClientRect();
-        const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
-        const clientOffset = monitor.getClientOffset();
-        const hoverClientX = (clientOffset as XYCoord).x - hoverBoundingRect.left;
-        if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) return;
-        if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) return;
-
-        console.log('무빙해?');
-        dispatchColumnMove(item, props);
-        // 불변성 변화로 변경해야 함
-        item.index = props.index;
-        item.parentId = props.parentId;
+        if (shouldDispatch) {
+          console.log('무빙해?');
+          dispatchColumnMove(item, props);
+          // 불변성 변화로 변경해야 함
+          item.index = props.index;
+          item.parentId = props.parentId;
+        }
       }
     });
 

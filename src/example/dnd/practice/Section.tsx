@@ -6,6 +6,7 @@ import { ItemTypes } from './itemTypes';
 import { dispatchSectionMove } from '../../../store/formData/formDataAction';
 import { isEqual } from 'lodash';
 import Placeholder from './Placeholder';
+import { ShouldDispatchMove } from '../../../util/shouldDispatchMove';
 
 const getStyle = (isDragging: boolean): CSSProperties => {
   return {
@@ -50,22 +51,20 @@ const Section: FC<SectionProps> = memo(
         };
       },
       hover: (item: IDragSectionSource, monitor) => {
-        if (!ref.current) return;
+        const shouldDispatch = ShouldDispatchMove({
+          ref,
+          dragIndex: item.index,
+          dragParentId: 'form',
+          hoverIndex: props.index,
+          hoverParentId: props.parentId,
+          monitor,
+          isVertical: true
+        });
 
-        const dragIndex = item.index;
-        const hoverIndex = props.index;
-
-        if (dragIndex === hoverIndex) return;
-
-        const hoverBoundingRect = ref.current?.getBoundingClientRect();
-        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-        const clientOffset = monitor.getClientOffset();
-        const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
-        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
-
-        console.log('무빙해?');
-        dispatchSectionMove(item, props);
+        if (shouldDispatch) {
+          console.log('무빙해?');
+          dispatchSectionMove(item, props);
+        }
 
         // 불변성 변화로 변경해야 함
         item.index = props.index;
