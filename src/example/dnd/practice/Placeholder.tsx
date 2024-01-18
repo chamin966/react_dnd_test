@@ -1,5 +1,4 @@
 import { useDrop } from 'react-dnd';
-import { ItemTypes } from './itemTypes';
 import { dispatchEmptyDropTarget } from '../../../store/formData/formDataAction';
 import { CSSProperties } from 'react';
 

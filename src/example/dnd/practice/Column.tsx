@@ -44,7 +44,7 @@ const Column: FC<ColumnProps> = memo(
     const ref = useRef<HTMLDivElement>(null);
 
     const [{ handlerId }, drop] = useDrop<
-      IDragColumnSource | IDragControlSource,
+      IDragColumnSource,
       void,
       { handlerId: Identifier | null }
     >({
@@ -54,20 +54,17 @@ const Column: FC<ColumnProps> = memo(
           handlerId: monitor.getHandlerId()
         };
       },
-      hover: (item: IDragColumnSource | IDragControlSource, monitor) => {
+      hover: (item: IDragColumnSource, monitor) => {
         if (!ref.current) return;
         const dragIndex = item.index;
         const hoverIndex = props.index;
 
-        if (item.parentRowId === props.parentRowId && dragIndex === hoverIndex)
-          return;
+        if (item.parentRowId === props.parentRowId && dragIndex === hoverIndex) return;
 
         const hoverBoundingRect = ref.current?.getBoundingClientRect();
-        const hoverMiddleX =
-          (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
+        const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
         const clientOffset = monitor.getClientOffset();
-        const hoverClientX =
-          (clientOffset as XYCoord).x - hoverBoundingRect.left;
+        const hoverClientX = (clientOffset as XYCoord).x - hoverBoundingRect.left;
         if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) return;
         if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) return;
 
@@ -78,7 +75,6 @@ const Column: FC<ColumnProps> = memo(
         item.parentRowId = props.parentRowId;
         item.parentSectionId = props.parentSectionId;
       }
-      // }
     });
 
     const [{ draggingItemId }, drag] = useDrag(
@@ -127,10 +123,7 @@ const Column: FC<ColumnProps> = memo(
           }}
         >
           {props.controls.length === 0 && (
-            <Placeholder
-              dropTargetId={props.id}
-              droppableType={ItemTypes.CONTROL}
-            />
+            <Placeholder dropTargetId={props.id} droppableType={ItemTypes.CONTROL} />
           )}
           {props.controls.map((controlId: string, index: number) =>
             renderControl(controlId, index)

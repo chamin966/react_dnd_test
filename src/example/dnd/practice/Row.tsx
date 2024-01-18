@@ -39,16 +39,15 @@ const Row: FC<RowProps> = memo(
   function Row(props: RowProps) {
     const ref = useRef<HTMLDivElement>(null);
 
-    const [{ handlerId, type }, drop] = useDrop<
+    const [{ handlerId }, drop] = useDrop<
       IDragRowSource,
       void,
-      { handlerId: Identifier | null; type: string }
+      { handlerId: Identifier | null }
     >({
       accept: ItemTypes.ROW,
       collect: (monitor) => {
         return {
-          handlerId: monitor.getHandlerId(),
-          type: String(monitor.getItemType())
+          handlerId: monitor.getHandlerId()
         };
       },
       hover: (item: IDragRowSource, monitor) => {
