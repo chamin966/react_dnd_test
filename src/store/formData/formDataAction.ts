@@ -4,6 +4,8 @@ import { IDragControlSource } from '../../example/dnd/practice/Control';
 import { IDragColumnSource } from '../../example/dnd/practice/Column';
 import { IDragRowSource } from '../../example/dnd/practice/Row';
 import { IDragSectionSource } from '../../example/dnd/practice/Section';
+import { Identifier } from 'dnd-core';
+import { ItemTypes } from '../../example/dnd/practice/itemTypes';
 
 export const dispatchControlMove = (
   draggingItem: IDragControlSource,
@@ -152,7 +154,8 @@ export const dispatchSectionMove = (
 
 export const dispatchEmptyDropTarget = (
   draggingItem: any,
-  dropTargetId: string
+  dropTargetId: string,
+  droppableType: string
 ) => {
   useFormData.setState((prevState) => {
     const draggingPath = findPath(prevState.form.sections, draggingItem.id);
@@ -160,18 +163,39 @@ export const dispatchEmptyDropTarget = (
     console.log('draggingPath: ', draggingPath);
     console.log('droppingPath:', droppingPath);
 
-    const controlId =
+    if (droppableType === ItemTypes.CONTROL) {
+      const draggingControlId =
+        prevState.form.sections[draggingPath[0]].rows[draggingPath[1]].columns[
+          draggingPath[2]
+        ].controls[draggingPath[3]];
+
       prevState.form.sections[draggingPath[0]].rows[draggingPath[1]].columns[
         draggingPath[2]
-      ].controls[draggingPath[3]];
+      ].controls.splice(draggingPath[3], 1);
 
-    prevState.form.sections[draggingPath[0]].rows[draggingPath[1]].columns[
-      draggingPath[2]
-    ].controls.splice(draggingPath[3], 1);
+      prevState.form.sections[draggingPath[0]].rows[draggingPath[1]].columns[
+        droppingPath[2]
+      ].controls.push(draggingControlId);
+    } else if (droppableType === ItemTypes.COLUMN) {
+      const draggingColumn =
+        prevState.form.sections[draggingPath[0]].rows[draggingPath[1]].columns[
+          draggingPath[2]
+        ];
 
-    prevState.form.sections[draggingPath[0]].rows[draggingPath[1]].columns[
-      droppingPath[2]
-    ].controls.push(controlId);
-    return prevState;
+      prevState.form.sections[draggingPath[0]].rows[
+        draggingPath[1]
+      ].columns.splice(draggingPath[2], 1);
+
+      prevState.form.sections[draggingPath[0]].rows[
+        droppingPath[1]
+      ].columns.push(draggingColumn);
+    } else if (droppableType === ItemTypes.ROW) {
+      const draggingRow =
+        prevState.form.sections[draggingPath[0]].rows[draggingPath[1]];
+
+      prevState.form.sections[draggingPath[0]].rows.splice(draggingPath[1], 1);
+
+      prevState.form.sections[droppingPath[0]].rows.push(draggingRow);
+    }
   });
 };

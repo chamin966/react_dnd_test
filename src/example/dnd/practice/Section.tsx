@@ -5,6 +5,7 @@ import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchSectionMove } from '../../../store/formData/formDataAction';
 import { isEqual } from 'lodash';
+import Placeholder from './Placeholder';
 
 export interface IDragSectionSource {
   id: string;
@@ -111,6 +112,12 @@ const Section: FC<SectionProps> = memo(
             gap: '10px'
           }}
         >
+          {props.rows.length === 0 && (
+            <Placeholder
+              dropTargetId={props.id}
+              droppableType={ItemTypes.ROW}
+            />
+          )}
           {props.rows.map((row, index) => renderRow(row, index))}
         </div>
       </div>

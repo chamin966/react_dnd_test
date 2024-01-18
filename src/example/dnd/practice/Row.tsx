@@ -5,6 +5,7 @@ import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchRowMove } from '../../../store/formData/formDataAction';
 import { isEqual } from 'lodash';
+import Placeholder from './Placeholder';
 
 export interface IDragRowSource {
   id: string;
@@ -28,15 +29,16 @@ const Row: FC<RowProps> = memo(
   function Row(props: RowProps) {
     const ref = useRef<HTMLDivElement>(null);
 
-    const [{ handlerId }, drop] = useDrop<
+    const [{ handlerId, type }, drop] = useDrop<
       IDragRowSource,
       void,
-      { handlerId: Identifier | null }
+      { handlerId: Identifier | null; type: string }
     >({
       accept: ItemTypes.ROW,
       collect: (monitor) => {
         return {
-          handlerId: monitor.getHandlerId()
+          handlerId: monitor.getHandlerId(),
+          type: String(monitor.getItemType())
         };
       },
       hover: (item: IDragRowSource, monitor) => {
@@ -118,6 +120,12 @@ const Row: FC<RowProps> = memo(
             gap: '10px'
           }}
         >
+          {props.columns.length === 0 && (
+            <Placeholder
+              dropTargetId={props.id}
+              droppableType={ItemTypes.COLUMN}
+            />
+          )}
           {props.columns.map((column: IColumn, index: number) =>
             renderColumn(column, index)
           )}

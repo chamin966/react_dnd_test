@@ -8,17 +8,19 @@ const getStyle = (isOver: boolean): CSSProperties => {
     border: isOver ? '1px dashed black' : 'none',
     padding: '0.5rem',
     height: '50px',
-    backgroundColor: isOver ? 'blue' : 'transparent'
+    width: '100%',
+    backgroundColor: isOver ? 'blue' : 'red'
   };
 };
 
 interface PlaceholderProps {
   dropTargetId: string;
+  droppableType: string;
 }
 
 function Placeholder(props: PlaceholderProps) {
   const [{ isOver }, drop] = useDrop({
-    accept: [ItemTypes.CONTROL],
+    accept: props.droppableType,
     collect: (monitor) => ({
       isOver: monitor.isOver()
     }),
@@ -28,13 +30,17 @@ function Placeholder(props: PlaceholderProps) {
     },
     drop: (item) => {
       console.log('드랍된 item:', item);
-      dispatchEmptyDropTarget(item, props.dropTargetId);
+      dispatchEmptyDropTarget(item, props.dropTargetId, props.droppableType);
     }
   });
 
   console.log('isOver: ', isOver);
 
-  return <div ref={drop} style={{ ...getStyle(isOver) }} />;
+  return (
+    <div ref={drop} style={{ ...getStyle(isOver) }}>
+      플레이스홀더
+    </div>
+  );
 }
 
 export default Placeholder;

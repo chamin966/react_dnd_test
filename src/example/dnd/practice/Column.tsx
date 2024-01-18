@@ -123,7 +123,10 @@ const Column: FC<ColumnProps> = memo(
           }}
         >
           {props.controls.length === 0 && (
-            <Placeholder dropTargetId={props.id} />
+            <Placeholder
+              dropTargetId={props.id}
+              droppableType={ItemTypes.CONTROL}
+            />
           )}
           {props.controls.map((controlId: string, index: number) =>
             renderControl(controlId, index)
