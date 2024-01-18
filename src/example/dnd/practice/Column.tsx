@@ -6,6 +6,7 @@ import { ItemTypes } from './itemTypes';
 import { dispatchColumnMove } from '../../../store/formData/formDataAction';
 import { FC } from 'react/index';
 import { isEqual } from 'lodash';
+import Placeholder from './Placeholder';
 
 export interface IDragColumnSource {
   id: string;
@@ -44,21 +45,6 @@ const Column: FC<ColumnProps> = memo(
       },
       hover: (item: IDragColumnSource | IDragControlSource, monitor) => {
         if (!ref.current) return;
-
-        // if (monitor.getItemType() === ItemTypes.CONTROL) {
-        //   if (props.controls.length === 0 && 'parentColumnId' in item) {
-        //     console.log('빈 컬럼에 컨트롤 들어옴');
-        //     console.log('item: ', item);
-        //     dispatchMoveToEmptyColumn(item, props);
-        //
-        //     item.index = props.index;
-        //     item.parentColumnId = props.id;
-        //     item.parentRowId = props.parentRowId;
-        //     item.parentSectionId = props.parentSectionId;
-        //   }
-        //   return;
-        // }
-        // if (monitor.getItemType() === ItemTypes.COLUMN) {
         const dragIndex = item.index;
         const hoverIndex = props.index;
 
@@ -136,6 +122,9 @@ const Column: FC<ColumnProps> = memo(
             gap: '10px'
           }}
         >
+          {props.controls.length === 0 && (
+            <Placeholder dropTargetId={props.id} />
+          )}
           {props.controls.map((controlId: string, index: number) =>
             renderControl(controlId, index)
           )}
