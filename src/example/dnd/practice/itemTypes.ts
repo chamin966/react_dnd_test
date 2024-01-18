@@ -1,6 +1,6 @@
 export const ItemTypes = {
   CONTROL: 'control',
-  Column: 'column',
-  Row: 'row',
-  Section: 'section'
+  COLUMN: 'column',
+  ROW: 'row',
+  SECTION: 'section'
 };

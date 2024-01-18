@@ -9,7 +9,7 @@ interface MoveControlProps {
   props: IDragControlSource;
 }
 
-export const MoveControl = ({
+export const MoveComponent = ({
   ref,
   monitor,
   item,

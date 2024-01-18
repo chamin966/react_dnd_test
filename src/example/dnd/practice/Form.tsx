@@ -12,6 +12,7 @@ function Form() {
     (state) => state.form,
     (prevState, nextState) => isEqual(prevState, nextState)
   );
+  console.log('form 확인: ', form);
   return (
     <div
       style={{
@@ -28,7 +29,6 @@ function Form() {
             parentFormId={form.id}
             id={section.id}
             rows={section.rows}
-            title={section.title}
             index={index}
           />
         ))}

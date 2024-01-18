@@ -4,6 +4,7 @@ import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchRowMove } from '../../../store/formData/formDataAction';
+import { isEqual } from 'lodash';
 
 export interface IDragRowSource {
   id: string;
@@ -13,7 +14,6 @@ export interface IDragRowSource {
 
 export interface IRow {
   id: string;
-  type: string;
   columns: IColumn[];
 }
 
@@ -24,104 +24,108 @@ interface RowProps {
   index: number;
 }
 
-const Row: FC<RowProps> = memo(function Row(props: RowProps) {
-  const ref = useRef<HTMLDivElement>(null);
+const Row: FC<RowProps> = memo(
+  function Row(props: RowProps) {
+    const ref = useRef<HTMLDivElement>(null);
 
-  const [{ handlerId }, drop] = useDrop<
-    IDragRowSource,
-    void,
-    { handlerId: Identifier | null }
-  >({
-    accept: ItemTypes.Row,
-    collect: (monitor) => {
-      return {
-        handlerId: monitor.getHandlerId()
-      };
-    },
-    hover: (item: IDragRowSource, monitor) => {
-      if (!ref.current) return;
+    const [{ handlerId }, drop] = useDrop<
+      IDragRowSource,
+      void,
+      { handlerId: Identifier | null }
+    >({
+      accept: ItemTypes.ROW,
+      collect: (monitor) => {
+        return {
+          handlerId: monitor.getHandlerId()
+        };
+      },
+      hover: (item: IDragRowSource, monitor) => {
+        if (!ref.current) return;
 
-      const dragIndex = item.index;
-      const hoverIndex = props.index;
+        const dragIndex = item.index;
+        const hoverIndex = props.index;
 
-      if (
-        item.parentSectionId === props.parentSectionId &&
-        dragIndex === hoverIndex
-      )
-        return;
+        if (
+          item.parentSectionId === props.parentSectionId &&
+          dragIndex === hoverIndex
+        )
+          return;
 
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
+        const hoverBoundingRect = ref.current?.getBoundingClientRect();
+        const hoverMiddleY =
+          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        const clientOffset = monitor.getClientOffset();
+        const hoverClientY =
+          (clientOffset as XYCoord).y - hoverBoundingRect.top;
+        if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
+        if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
-      console.log('무빙해?');
-      dispatchRowMove(item, props);
+        console.log('무빙해?');
+        dispatchRowMove(item, props);
 
-      // 불변성 변화로 변경해야 함
-      item.index = props.index;
-      item.parentSectionId = props.parentSectionId;
-    }
-  });
+        // 불변성 변화로 변경해야 함
+        item.index = props.index;
+        item.parentSectionId = props.parentSectionId;
+      }
+    });
 
-  const [{ isDragging }, drag] = useDrag({
-    type: ItemTypes.Row,
-    item: () => {
-      return {
-        id: props.id,
-        index: props.index,
-        parentSectionId: props.parentSectionId
-      };
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging()
-    })
-  });
+    const [{ isDragging }, drag] = useDrag({
+      type: ItemTypes.ROW,
+      item: () => {
+        return {
+          id: props.id,
+          index: props.index,
+          parentSectionId: props.parentSectionId
+        };
+      },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging()
+      })
+    });
 
-  const opacity = isDragging ? 0.5 : 1;
-  drag(drop(ref));
+    const opacity = isDragging ? 0.5 : 1;
+    drag(drop(ref));
 
-  const renderColumn = useCallback((column: IColumn, index: number) => {
+    const renderColumn = useCallback((column: IColumn, index: number) => {
+      return (
+        <Column
+          key={column.id}
+          id={column.id}
+          controls={column.controls}
+          parentSectionId={props.parentSectionId}
+          parentRowId={props.id}
+          index={index}
+        />
+      );
+    }, []);
+
     return (
-      <Column
-        key={column.id}
-        id={column.id}
-        controls={column.controls}
-        parentSectionId={props.parentSectionId}
-        parentRowId={props.id}
-        index={index}
-      />
-    );
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        padding: '20px',
-        backgroundColor: 'coral',
-        border: '1px solid black',
-        opacity: opacity,
-        cursor: 'move'
-      }}
-      data-handler-id={handlerId}
-    >
-      {props.id} {props.parentSectionId}
       <div
+        ref={ref}
         style={{
-          display: 'flex',
-          gap: '10px'
+          padding: '20px',
+          backgroundColor: 'coral',
+          border: '1px solid black',
+          opacity: opacity,
+          cursor: 'move'
         }}
+        data-handler-id={handlerId}
       >
-        {props.columns.map((column: IColumn, index: number) =>
-          renderColumn(column, index)
-        )}
+        {props.id} {props.parentSectionId}
+        <div
+          style={{
+            display: 'flex',
+            gap: '10px'
+          }}
+        >
+          {props.columns.map((column: IColumn, index: number) =>
+            renderColumn(column, index)
+          )}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+  (prevProps, nextProps) => isEqual(prevProps, nextProps)
+);
 
 export default Row;
