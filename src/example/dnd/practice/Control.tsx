@@ -1,9 +1,20 @@
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
-import { FC, memo, useRef } from 'react';
+import { CSSProperties, FC, memo, useRef } from 'react';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchControlMove } from '../../../store/formData/formDataAction';
 import { isEqual } from 'lodash';
+
+const getStyle = (isDragging: boolean): CSSProperties => {
+  return {
+    height: '50px',
+    backgroundColor: 'burlywood',
+    border: '1px solid black',
+    padding: '10px',
+    opacity: isDragging ? '0.3' : '1',
+    cursor: 'move'
+  };
+};
 
 export interface IDragControlSource {
   id: string;
@@ -85,7 +96,7 @@ const Control: FC<ControlProps> = memo(
       }
     });
 
-    const [{ isDragging }, drag] = useDrag({
+    const [{ draggingItemId }, drag] = useDrag({
       type: ItemTypes.CONTROL,
       item: () => {
         return {
@@ -96,25 +107,15 @@ const Control: FC<ControlProps> = memo(
           parentSectionId: props.parentSectionId
         };
       },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging()
-      })
+      collect: (monitor) => ({ draggingItemId: monitor.getItem()?.id })
     });
 
-    const opacity = isDragging ? 0.5 : 1;
     drag(drop(ref));
 
     return (
       <div
         ref={ref}
-        style={{
-          height: '50px',
-          backgroundColor: 'burlywood',
-          border: '1px solid black',
-          padding: '10px',
-          opacity: opacity,
-          cursor: 'move'
-        }}
+        style={{ ...getStyle(draggingItemId === props.id) }}
         data-handler-id={handlerId}
       >
         {props.id}: {props.parentColumnId} {props.parentRowId}{' '}

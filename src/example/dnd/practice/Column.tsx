@@ -1,5 +1,5 @@
 import Control, { IDragControlSource } from './Control';
-import { memo, useCallback, useRef } from 'react';
+import { CSSProperties, memo, useCallback, useRef } from 'react';
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
@@ -7,6 +7,17 @@ import { dispatchColumnMove } from '../../../store/formData/formDataAction';
 import { FC } from 'react/index';
 import { isEqual } from 'lodash';
 import Placeholder from './Placeholder';
+
+const getStyle = (isDragging: boolean): CSSProperties => {
+  return {
+    border: '1px solid black',
+    padding: '20px',
+    backgroundColor: 'beige',
+    width: '100%',
+    opacity: isDragging ? '0.3' : '1',
+    cursor: 'move'
+  };
+};
 
 export interface IDragColumnSource {
   id: string;
@@ -70,22 +81,22 @@ const Column: FC<ColumnProps> = memo(
       // }
     });
 
-    const [{ isDragging }, drag] = useDrag({
-      type: ItemTypes.COLUMN,
-      item: () => {
-        return {
-          id: props.id,
-          index: props.index,
-          parentRowId: props.parentRowId,
-          parentSectionId: props.parentSectionId
-        };
+    const [{ draggingItemId }, drag] = useDrag(
+      {
+        type: ItemTypes.COLUMN,
+        item: () => {
+          return {
+            id: props.id,
+            index: props.index,
+            parentRowId: props.parentRowId,
+            parentSectionId: props.parentSectionId
+          };
+        },
+        collect: (monitor) => ({ draggingItemId: monitor.getItem()?.id })
       },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging()
-      })
-    });
+      []
+    );
 
-    const opacity = isDragging ? 0.5 : 1;
     drag(drop(ref));
 
     const renderControl = useCallback((controlId: string, index: number) => {
@@ -104,14 +115,7 @@ const Column: FC<ColumnProps> = memo(
     return (
       <div
         ref={ref}
-        style={{
-          border: '1px solid black',
-          padding: '20px',
-          backgroundColor: 'beige',
-          width: '100%',
-          opacity: opacity,
-          cursor: 'move'
-        }}
+        style={{ ...getStyle(draggingItemId === props.id) }}
         data-handler-id={handlerId}
       >
         {props.id} {props.parentRowId} {props.parentSectionId}

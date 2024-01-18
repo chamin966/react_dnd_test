@@ -1,11 +1,21 @@
 import Row, { IRow } from './Row';
-import { FC, memo, useCallback, useRef } from 'react';
+import { CSSProperties, FC, memo, useCallback, useRef } from 'react';
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchSectionMove } from '../../../store/formData/formDataAction';
 import { isEqual } from 'lodash';
 import Placeholder from './Placeholder';
+
+const getStyle = (isDragging: boolean): CSSProperties => {
+  return {
+    padding: '20px',
+    backgroundColor: 'darkkhaki',
+    border: '1px solid black',
+    opacity: isDragging ? '0.3' : '1',
+    cursor: 'move'
+  };
+};
 
 export interface IDragSectionSource {
   id: string;
@@ -64,7 +74,7 @@ const Section: FC<SectionProps> = memo(
       }
     });
 
-    const [{ isDragging }, drag] = useDrag({
+    const [{ draggingItemId }, drag] = useDrag({
       type: ItemTypes.SECTION,
       item: () => {
         return {
@@ -72,12 +82,9 @@ const Section: FC<SectionProps> = memo(
           index: props.index
         };
       },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging()
-      })
+      collect: (monitor) => ({ draggingItemId: monitor.getItem()?.id })
     });
 
-    const opacity = isDragging ? 0.5 : 1;
     drag(drop(ref));
 
     const renderRow = useCallback((row: IRow, index: number) => {
@@ -96,11 +103,7 @@ const Section: FC<SectionProps> = memo(
       <div
         ref={ref}
         style={{
-          padding: '20px',
-          backgroundColor: 'darkkhaki',
-          border: '1px solid black',
-          opacity: opacity,
-          cursor: 'move'
+          ...getStyle(draggingItemId === props.id)
         }}
         data-handler-id={handlerId}
       >
