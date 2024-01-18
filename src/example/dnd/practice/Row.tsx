@@ -20,7 +20,7 @@ const getStyle = (isDragging: boolean): CSSProperties => {
 export interface IDragRowSource {
   id: string;
   index: number;
-  parentSectionId: string;
+  parentId: string;
 }
 
 export interface IRow {
@@ -31,7 +31,7 @@ export interface IRow {
 interface RowProps {
   id: string;
   columns: IColumn[];
-  parentSectionId: string;
+  parentId: string;
   index: number;
 }
 
@@ -39,11 +39,7 @@ const Row: FC<RowProps> = memo(
   function Row(props: RowProps) {
     const ref = useRef<HTMLDivElement>(null);
 
-    const [{ handlerId }, drop] = useDrop<
-      IDragRowSource,
-      void,
-      { handlerId: Identifier | null }
-    >({
+    const [{ handlerId }, drop] = useDrop<IDragRowSource, void, { handlerId: Identifier | null }>({
       accept: ItemTypes.ROW,
       collect: (monitor) => {
         return {
@@ -56,18 +52,12 @@ const Row: FC<RowProps> = memo(
         const dragIndex = item.index;
         const hoverIndex = props.index;
 
-        if (
-          item.parentSectionId === props.parentSectionId &&
-          dragIndex === hoverIndex
-        )
-          return;
+        if (item.parentId === props.parentId && dragIndex === hoverIndex) return;
 
         const hoverBoundingRect = ref.current?.getBoundingClientRect();
-        const hoverMiddleY =
-          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
         const clientOffset = monitor.getClientOffset();
-        const hoverClientY =
-          (clientOffset as XYCoord).y - hoverBoundingRect.top;
+        const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
         if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
         if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
@@ -76,7 +66,7 @@ const Row: FC<RowProps> = memo(
 
         // 불변성 변화로 변경해야 함
         item.index = props.index;
-        item.parentSectionId = props.parentSectionId;
+        item.parentId = props.parentId;
       }
     });
 
@@ -86,7 +76,7 @@ const Row: FC<RowProps> = memo(
         return {
           id: props.id,
           index: props.index,
-          parentSectionId: props.parentSectionId
+          parentId: props.parentId
         };
       },
       collect: (monitor) => ({ draggingItemId: monitor.getItem()?.id })
@@ -100,8 +90,7 @@ const Row: FC<RowProps> = memo(
           key={column.id}
           id={column.id}
           controls={column.controls}
-          parentSectionId={props.parentSectionId}
-          parentRowId={props.id}
+          parentId={props.id}
           index={index}
         />
       );
@@ -115,7 +104,7 @@ const Row: FC<RowProps> = memo(
         }}
         data-handler-id={handlerId}
       >
-        {props.id} {props.parentSectionId}
+        {props.id}
         <div
           style={{
             display: 'flex',
@@ -123,14 +112,9 @@ const Row: FC<RowProps> = memo(
           }}
         >
           {props.columns.length === 0 && (
-            <Placeholder
-              dropTargetId={props.id}
-              droppableType={ItemTypes.COLUMN}
-            />
+            <Placeholder dropTargetId={props.id} droppableType={ItemTypes.COLUMN} />
           )}
-          {props.columns.map((column: IColumn, index: number) =>
-            renderColumn(column, index)
-          )}
+          {props.columns.map((column: IColumn, index: number) => renderColumn(column, index))}
         </div>
       </div>
     );

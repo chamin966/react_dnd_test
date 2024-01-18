@@ -30,7 +30,7 @@ export interface ISection {
 interface SectionProps {
   id: string;
   rows: IRow[];
-  parentFormId: string;
+  parentId: string;
   index: number;
 }
 
@@ -58,11 +58,9 @@ const Section: FC<SectionProps> = memo(
         if (dragIndex === hoverIndex) return;
 
         const hoverBoundingRect = ref.current?.getBoundingClientRect();
-        const hoverMiddleY =
-          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
         const clientOffset = monitor.getClientOffset();
-        const hoverClientY =
-          (clientOffset as XYCoord).y - hoverBoundingRect.top;
+        const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
         if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
         if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
@@ -93,8 +91,8 @@ const Section: FC<SectionProps> = memo(
           key={row.id}
           id={row.id}
           columns={row.columns}
-          parentSectionId={props.id}
           index={index}
+          parentId={props.parentId}
         />
       );
     }, []);
@@ -116,10 +114,7 @@ const Section: FC<SectionProps> = memo(
           }}
         >
           {props.rows.length === 0 && (
-            <Placeholder
-              dropTargetId={props.id}
-              droppableType={ItemTypes.ROW}
-            />
+            <Placeholder dropTargetId={props.id} droppableType={ItemTypes.ROW} />
           )}
           {props.rows.map((row, index) => renderRow(row, index))}
         </div>

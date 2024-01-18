@@ -19,17 +19,13 @@ const getStyle = (isDragging: boolean): CSSProperties => {
 export interface IDragControlSource {
   id: string;
   index: number;
-  parentColumnId: string;
-  parentRowId: string;
-  parentSectionId: string;
+  parentId: string;
 }
 
 export interface ControlProps {
   id: string;
   index: number;
-  parentSectionId: string;
-  parentRowId: string;
-  parentColumnId: string;
+  parentId: string;
 }
 const Control: FC<ControlProps> = memo(
   function Control(props: ControlProps) {
@@ -52,18 +48,12 @@ const Control: FC<ControlProps> = memo(
         const dragIndex = item.index;
         const hoverIndex = props.index;
 
-        if (
-          item.parentColumnId === props.parentColumnId &&
-          dragIndex === hoverIndex
-        )
-          return;
+        if (item.parentId === props.parentId && dragIndex === hoverIndex) return;
 
         const hoverBoundingRect = ref.current?.getBoundingClientRect();
-        const hoverMiddleY =
-          (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
         const clientOffset = monitor.getClientOffset();
-        const hoverClientY =
-          (clientOffset as XYCoord).y - hoverBoundingRect.top;
+        const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
         if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
         if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
@@ -90,9 +80,7 @@ const Control: FC<ControlProps> = memo(
 
         // 불변성 변화로 변경해야 함
         item.index = props.index;
-        item.parentColumnId = props.parentColumnId;
-        item.parentRowId = props.parentRowId;
-        item.parentSectionId = props.parentSectionId;
+        item.parentId = props.parentId;
       }
     });
 
@@ -102,9 +90,7 @@ const Control: FC<ControlProps> = memo(
         return {
           id: props.id,
           index: props.index,
-          parentColumnId: props.parentColumnId,
-          parentRowId: props.parentRowId,
-          parentSectionId: props.parentSectionId
+          parentColumnId: props.parentId
         };
       },
       collect: (monitor) => ({ draggingItemId: monitor.getItem()?.id })
@@ -118,8 +104,7 @@ const Control: FC<ControlProps> = memo(
         style={{ ...getStyle(draggingItemId === props.id) }}
         data-handler-id={handlerId}
       >
-        {props.id}: {props.parentColumnId} {props.parentRowId}{' '}
-        {props.parentSectionId}
+        {props.id}
       </div>
     );
   },

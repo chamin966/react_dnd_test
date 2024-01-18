@@ -26,7 +26,7 @@ function Form() {
         {form.sections.map((section, index) => (
           <Section
             key={section.id}
-            parentFormId={form.id}
+            parentId={form.id}
             id={section.id}
             rows={section.rows}
             index={index}
