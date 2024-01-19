@@ -62,7 +62,6 @@ const Row: FC<RowProps> = memo(
           console.log('무빙해?');
           dispatchRowMove(item, props);
 
-          // 불변성 변화로 변경해야 함
           item.index = props.index;
           item.parentId = props.parentId;
         }

@@ -54,11 +54,7 @@ interface DragItem {
 
 export const Card: FC<CardProps> = (props) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [{ handlerId }, drop] = useDrop<
-    DragItem,
-    void,
-    { handlerId: Identifier | null }
-  >({
+  const [{ handlerId }, drop] = useDrop<DragItem, void, { handlerId: Identifier | null }>({
     accept: ItemTypes.CARD,
     collect: (monitor) => {
       return {
@@ -110,8 +106,7 @@ export const Card: FC<CardProps> = (props) => {
       if (dragIndex === hoverIndex) return;
 
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
       const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
@@ -119,7 +114,6 @@ export const Card: FC<CardProps> = (props) => {
 
       props.moveCard(dragIndex, hoverIndex);
 
-      // 불변성 변화로 변경해야 함
       console.log(hoverIndex);
       item.index = hoverIndex;
 

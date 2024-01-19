@@ -1,5 +1,5 @@
 import { useDrag, useDrop } from 'react-dnd';
-import { CSSProperties, FC, memo, useRef } from 'react';
+import { CSSProperties, FC, memo, useRef, useState } from 'react';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchControlMove } from '../../../store/formData/formDataAction';
@@ -76,7 +76,6 @@ const Control: FC<ControlProps> = memo(
           이를 통해 오류를 방지하고, 예상치 못한 상태 변화로 인한 문제를 최소화할 수 있습니다.
           * */
 
-          // 불변성 변화로 변경해야 함
           item.index = props.index;
           item.parentId = props.parentId;
         }
@@ -89,7 +88,7 @@ const Control: FC<ControlProps> = memo(
         return {
           id: props.id,
           index: props.index,
-          parentColumnId: props.parentId
+          parentId: props.parentId
         };
       },
       collect: (monitor) => ({ draggingItemId: monitor.getItem()?.id })

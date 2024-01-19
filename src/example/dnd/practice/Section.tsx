@@ -65,7 +65,6 @@ const Section: FC<SectionProps> = memo(
           console.log('무빙해?');
           dispatchSectionMove(item, props);
 
-          // 불변성 변화로 변경해야 함
           item.index = props.index;
         }
       }

@@ -67,7 +67,7 @@ const Column: FC<ColumnProps> = memo(
         if (shouldDispatch) {
           console.log('무빙해?');
           dispatchColumnMove(item, props);
-          // 불변성 변화로 변경해야 함
+
           item.index = props.index;
           item.parentId = props.parentId;
         }
