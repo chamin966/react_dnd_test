@@ -1,6 +1,6 @@
 import Column, { IColumn } from './Column';
 import { CSSProperties, FC, memo, useCallback, useRef } from 'react';
-import { useDrag, useDrop, XYCoord } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchRowMove } from '../../../store/formData/formDataAction';

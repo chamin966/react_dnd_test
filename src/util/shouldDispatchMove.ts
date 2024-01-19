@@ -14,7 +14,16 @@ interface ShouldDispatchMoveProps {
 
 export const ShouldDispatchMove = (props: ShouldDispatchMoveProps) => {
   if (!props.ref.current) return false;
-
+  console.log(
+    'dragParentId: ',
+    props.dragParentId,
+    'hoverParentId:',
+    props.hoverParentId,
+    'dragIndex:',
+    props.dragIndex,
+    'hoverIndex:',
+    props.hoverIndex
+  );
   if (props.dragParentId === props.hoverParentId && props.dragIndex === props.hoverIndex)
     return false;
 

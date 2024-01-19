@@ -1,4 +1,4 @@
-import { useDrag, useDrop, XYCoord } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { CSSProperties, FC, memo, useRef } from 'react';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';

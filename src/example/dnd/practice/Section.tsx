@@ -1,6 +1,6 @@
 import Row, { IRow } from './Row';
 import { CSSProperties, FC, memo, useCallback, useRef } from 'react';
-import { useDrag, useDrop, XYCoord } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchSectionMove } from '../../../store/formData/formDataAction';
@@ -64,10 +64,10 @@ const Section: FC<SectionProps> = memo(
         if (shouldDispatch) {
           console.log('무빙해?');
           dispatchSectionMove(item, props);
-        }
 
-        // 불변성 변화로 변경해야 함
-        item.index = props.index;
+          // 불변성 변화로 변경해야 함
+          item.index = props.index;
+        }
       }
     });
 
@@ -86,13 +86,7 @@ const Section: FC<SectionProps> = memo(
 
     const renderRow = useCallback((row: IRow, index: number) => {
       return (
-        <Row
-          key={row.id}
-          id={row.id}
-          columns={row.columns}
-          index={index}
-          parentId={props.parentId}
-        />
+        <Row key={row.id} id={row.id} columns={row.columns} index={index} parentId={props.id} />
       );
     }, []);
 

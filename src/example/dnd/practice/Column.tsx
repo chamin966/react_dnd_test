@@ -1,6 +1,6 @@
-import Control, { IDragControlSource } from './Control';
+import Control from './Control';
 import { CSSProperties, memo, useCallback, useRef } from 'react';
-import { useDrag, useDrop, XYCoord } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { Identifier } from 'dnd-core';
 import { ItemTypes } from './itemTypes';
 import { dispatchColumnMove } from '../../../store/formData/formDataAction';
